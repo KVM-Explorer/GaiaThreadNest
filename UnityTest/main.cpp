@@ -5,7 +5,7 @@
 void Sum()
 {
     int x=0;
-    std::cout<<"Value:"<<++x<<std::endl;
+    std::cout<<"Value:"<<x<<std::endl;
 }
 
 int main()
@@ -16,6 +16,8 @@ int main()
 
     pool.Excute();
 
-    sleep(100);
+    sleep(2);
+    pool.Destory();
+    sleep(3);
     return 0;
 }

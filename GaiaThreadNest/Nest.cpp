@@ -31,8 +31,6 @@ void Gaia::ThreadNest::Nest::Excute() {
                             usleep(1000 * rest_time.count());
                         }
                     }
-
-
                 })
                 );
         (*it).ListPoint = (std::unique_ptr<std::thread>) &ThreadPool.back();
@@ -41,8 +39,11 @@ void Gaia::ThreadNest::Nest::Excute() {
 
 void Gaia::ThreadNest::Nest::Destory()
 {
-    std::list<std::thread>::iterator it;
-    for(it=ThreadPool.begin();it!=ThreadPool.end();it++){
-        (*it).join();
+    std::list<Worker>::iterator it;
+    for(it=WorkerPool.begin();it!=WorkerPool.end();it++){
+        if((*it).ListPoint->joinable()){
+            (*it).Iswork= false;
+            (*it).ListPoint->join();
+        }
     }
 }
