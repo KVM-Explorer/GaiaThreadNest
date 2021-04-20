@@ -24,7 +24,8 @@ namespace Gaia::ThreadNest
             this->Iswork.store(worker.Iswork);
             this->LifeTimestamp=worker.LifeTimestamp;
             this->Frequency=worker.Frequency;
-            this->ListPoint=worker.ListPoint;
+            //todo unique_ptr copy
+//            this->ListPoint=std::move(worker.ListPoint);
 
         }
 
@@ -53,7 +54,7 @@ namespace Gaia::ThreadNest
          */
         Timestamp   LifeTimestamp;
         int         Frequency;
-        std::unique_ptr<std::thread> *ListPoint;
+        std::unique_ptr<std::thread> ListPoint;
         std::atomic<bool> Iswork;
         Task task;
     };

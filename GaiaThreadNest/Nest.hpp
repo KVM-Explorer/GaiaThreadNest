@@ -22,9 +22,18 @@ namespace Gaia::ThreadNest
         ~Nest(){};
 
         using Task = std::function<void()> ;
-        void AddWorker(Task task);
+
+        /**
+         * @brief Add  function into list but not construct thread and set frequency
+         * @param task void() function point
+         * @param frequency frequency in 1 second
+         */
+
+        void AddWorker(Task task, int frequency);
 
         void Excute();
+
+        void Destory();
 
     public:
 

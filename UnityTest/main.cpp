@@ -12,9 +12,10 @@ int main()
 {
     Gaia::ThreadNest::Nest pool;
 
-    pool.AddWorker(Sum);
+    pool.AddWorker(Sum, 1);
 
     pool.Excute();
+
     sleep(100);
     return 0;
 }

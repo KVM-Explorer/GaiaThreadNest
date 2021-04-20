@@ -1,11 +1,14 @@
 #include "Nest.hpp"
+#include <unistd.h>
+#include <chrono>
 
+void Gaia::ThreadNest::Nest::AddWorker(Task task, int frequency) {
 
-
-void Gaia::ThreadNest::Nest::AddWorker(Task task) {
     Worker worker;
     worker.Iswork= true;
     worker.task=task;
+    worker.SetFrequency(int(1/double (frequency)*1000));
+    worker.LifeTimestamp=Timestamp(std::chrono::milliseconds (int(1/double (frequency)*1000)));
     WorkerPool.push_back(worker);
 }
 
@@ -16,9 +19,30 @@ void Gaia::ThreadNest::Nest::Excute() {
         ThreadPool.push_back(std::thread(
 
                 [this,it]()  ->void {
-                    if((*it).Iswork== false) return;
-                    (*it).task();
+                    while(true){
+                        if((*it).Iswork== false) return;
+
+                        (*it).LifeTimestamp.Renew();
+                        (*it).task();
+
+                        std::chrono::duration<double,std::milli> rest_time=(*it).LifeTimestamp.GetRemainingTime();
+
+                        if(rest_time.count() > 0){
+                            usleep(1000 * rest_time.count());
+                        }
+                    }
+
+
                 })
                 );
+        (*it).ListPoint = (std::unique_ptr<std::thread>) &ThreadPool.back();
+    }
+}
+
+void Gaia::ThreadNest::Nest::Destory()
+{
+    std::list<std::thread>::iterator it;
+    for(it=ThreadPool.begin();it!=ThreadPool.end();it++){
+        (*it).join();
     }
 }
