@@ -24,7 +24,8 @@ namespace Gaia::ThreadNest
         using Task = std::function<void()> ;
 
         /**
-         * @brief Add  function into list but not construct thread and set frequency,
+         * @brief Add  function into list and construct the thread but not
+         *        execute thread and set frequency,
          *        all of functions are endless loop and excute all the time
          * @param task void() function point
          * @param frequency frequency in 1 second
@@ -32,7 +33,12 @@ namespace Gaia::ThreadNest
 
         void AddWorker(Task task, int frequency);
 
+        /**
+         * @brief Same as the Addworker but only execute once
+         * @param task void() function point
+         */
         void AddWorkerOnce(Task task);
+
 
         void Excute();
 
@@ -41,6 +47,5 @@ namespace Gaia::ThreadNest
     public:
 
         std::list<Gaia::ThreadNest::Worker> WorkerPool;
-        std::list<std::thread> ThreadPool;
     };
 }

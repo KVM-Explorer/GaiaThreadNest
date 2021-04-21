@@ -15,23 +15,25 @@ void Gaia::ThreadNest::Nest::AddWorker(Task task, int frequency) {
     it--;
 
     /// construct lamda function to add function to ThreadPool
-    ThreadPool.push_back(std::thread(
-            [this,it]()  ->void {
-                std::future<bool> get_ready_state=(*it).IsStart.get_future();
-                get_ready_state.get();
-                while(true){
-                    if((*it).Iswork== false) return;
-                    (*it).LifeTimestamp.Renew();
-                    (*it).task();
-                    std::chrono::duration<double,std::milli> rest_time=(*it).LifeTimestamp.GetRemainingTime();
-                    if(rest_time.count() > 0){
-                        usleep(1000 * rest_time.count());
-                    }
-                }
-            })
-    );
+    (*it).ListPoint=std::make_unique<std::thread>(
+            std::thread(
+                    [this,it]()  ->void {
+                        std::future<bool> get_ready_state=(*it).IsStart.get_future();
+                        get_ready_state.get();
+                        while(true){
+                            if((*it).Iswork== false) return;
+                            (*it).LifeTimestamp.Renew();
+                            (*it).task();
+                            std::chrono::duration<double,std::milli>
+                                    rest_time=(*it).LifeTimestamp.GetRemainingTime();
+                            if(rest_time.count() > 0){
+                                usleep(1000 * rest_time.count());
+                            }
+                        }
+                    })
+            );
 
-    WorkerPool.back().ListPoint=(std::unique_ptr<std::thread>) &ThreadPool.back();
+
 }
 
 void Gaia::ThreadNest::Nest::Excute() {
@@ -49,8 +51,11 @@ void Gaia::ThreadNest::Nest::Destory()
         (*it).Iswork= false;
         if((*it).ListPoint->joinable()){
             (*it).ListPoint->join();
+            std::cout<<(*it).ListPoint->get_id()<<std::endl;
 
+//            (*it).ListPoint.reset(nullptr);
         }
+
     }
 }
 
@@ -64,7 +69,7 @@ void Gaia::ThreadNest::Nest::AddWorkerOnce(Gaia::ThreadNest::Nest::Task task) {
     it--;
 
     /// construct lamda function to add function to ThreadPool
-    ThreadPool.push_back(std::thread(
+    (*it).ListPoint=std::make_unique<std::thread>(std::thread(
             [this,it]()  ->void {
                 (*it).IsStart.get_future();
 
@@ -74,5 +79,5 @@ void Gaia::ThreadNest::Nest::AddWorkerOnce(Gaia::ThreadNest::Nest::Task task) {
             })
     );
 
-    WorkerPool.back().ListPoint=(std::unique_ptr<std::thread>) &ThreadPool.back();
+
 }

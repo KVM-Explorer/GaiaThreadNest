@@ -18,9 +18,9 @@ namespace Gaia::ThreadNest
     public:
         explicit Worker() {}
 //        Worker(Worker&& target) noexcept;
-        Worker(const Worker& worker) ;
+        Worker( Worker&& worker) ;
 
-        ~Worker(){}
+        ~Worker();
 
 
 
@@ -44,10 +44,10 @@ namespace Gaia::ThreadNest
          *  timestamp to know whether nest thread ()
          */
         Timestamp   LifeTimestamp;
-        int         Frequency;
-        std::unique_ptr<std::thread> ListPoint;
-        std::atomic<bool> Iswork;
-        std::promise<bool> IsStart;
-        Task task;
+        int         Frequency;                  //once executable cycle  unit is ms
+        std::unique_ptr<std::thread> ListPoint; //Point to the thread
+        std::atomic<bool> Iswork;           //control the thread whether is alive
+        std::promise<bool> IsStart;         //Control the thread whether to execute
+        Task task;                          //store the void() function
     };
 }

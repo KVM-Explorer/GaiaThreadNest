@@ -23,7 +23,8 @@ int main()
     pool.Excute();
 
     sleep(2);
-//    pool.Destory();
+    pool.Destory();
+
     sleep(3);
     return 0;
 }
