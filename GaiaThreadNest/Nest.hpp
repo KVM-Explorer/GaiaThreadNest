@@ -24,12 +24,15 @@ namespace Gaia::ThreadNest
         using Task = std::function<void()> ;
 
         /**
-         * @brief Add  function into list but not construct thread and set frequency
+         * @brief Add  function into list but not construct thread and set frequency,
+         *        all of functions are endless loop and excute all the time
          * @param task void() function point
          * @param frequency frequency in 1 second
          */
 
         void AddWorker(Task task, int frequency);
+
+        void AddWorkerOnce(Task task);
 
         void Excute();
 

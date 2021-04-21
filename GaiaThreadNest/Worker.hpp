@@ -14,20 +14,11 @@ namespace Gaia::ThreadNest
 {
     class Worker
     {
-//        friend class Nest;
 
     public:
         explicit Worker() {}
-
-        Worker(const Worker& worker) {
-            this->task=worker.task;
-            this->Iswork.store(worker.Iswork);
-            this->LifeTimestamp=worker.LifeTimestamp;
-            this->Frequency=worker.Frequency;
-            //todo unique_ptr copy
-//            this->ListPoint=std::move(worker.ListPoint);
-
-        }
+//        Worker(Worker&& target) noexcept;
+        Worker(const Worker& worker) ;
 
         ~Worker(){}
 
@@ -56,6 +47,7 @@ namespace Gaia::ThreadNest
         int         Frequency;
         std::unique_ptr<std::thread> ListPoint;
         std::atomic<bool> Iswork;
+        std::promise<bool> IsStart;
         Task task;
     };
 }
