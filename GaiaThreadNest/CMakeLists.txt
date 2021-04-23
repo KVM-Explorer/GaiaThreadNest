@@ -65,7 +65,7 @@ find_hpp(${CMAKE_CURRENT_SOURCE_DIR} TARGET_HEADER)
 #==============================
 
 # To lower the running cost, this module will be compiled as a static library.
-add_library(${TARGET_NAME} STATIC ${TARGET_SOURCE} ${TARGET_HEADER})
+add_library(${TARGET_NAME} STATIC ${TARGET_SOURCE} ${TARGET_HEADER} ../UnityTest/main.cpp)
 
 # Enable 'DEBUG' Macro in Debug Mode
 if(CMAKE_BUILD_TYPE STREQUAL Debug)

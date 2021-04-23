@@ -18,3 +18,4 @@ endif()
 #==============================
 
 add_subdirectory("GaiaThreadNest")
+add_subdirectory("UnityTest")
